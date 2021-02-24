@@ -1,0 +1,27 @@
+syntax = "proto3";
+package blog;
+
+option go_package = "blog";
+
+import "blog/blog.proto";
+
+service BlogAPI {
+  rpc ArticleList (ArticleListRequest) returns (ArticleListResponse);
+  rpc Article (ArticleRequest) returns (ArticleResponse);
+}
+
+message ArticleListRequest {
+}
+
+message ArticleListResponse {
+  repeated Article articles = 1;
+}
+
+
+message ArticleRequest {
+  int64 id = 1;
+}
+
+message ArticleResponse {
+  Article article = 1;
+}

@@ -1,0 +1,22 @@
+syntax = "proto3";
+package blog;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "blog";
+
+message Article {
+  int64 id = 1;
+  string title = 2;
+  string description = 3;
+  google.protobuf.Timestamp created = 4;
+}
+
+
+//protoc -I=. --go_out=./ **/*.proto
+
+//protoc -I. \
+//-I /home/ymoha/go/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis/ \
+//--go_out=plugins=grpc:. \
+//--grpc-gateway_out=logtostderr=true:. \
+//**/*.proto
