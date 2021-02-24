@@ -7,7 +7,11 @@
 package blog
 
 import (
+	context "context"
 	proto "github.com/golang/protobuf/proto"
+	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
@@ -341,4 +345,120 @@ func file_blog_blog_api_proto_init() {
 	file_blog_blog_api_proto_rawDesc = nil
 	file_blog_blog_api_proto_goTypes = nil
 	file_blog_blog_api_proto_depIdxs = nil
+}
+
+// Reference imports to suppress errors if they are not otherwise used.
+var _ context.Context
+var _ grpc.ClientConnInterface
+
+// This is a compile-time assertion to ensure that this generated file
+// is compatible with the grpc package it is being compiled against.
+const _ = grpc.SupportPackageIsVersion6
+
+// BlogAPIClient is the client API for BlogAPI service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
+type BlogAPIClient interface {
+	ArticleList(ctx context.Context, in *ArticleListRequest, opts ...grpc.CallOption) (*ArticleListResponse, error)
+	Article(ctx context.Context, in *ArticleRequest, opts ...grpc.CallOption) (*ArticleResponse, error)
+}
+
+type blogAPIClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewBlogAPIClient(cc grpc.ClientConnInterface) BlogAPIClient {
+	return &blogAPIClient{cc}
+}
+
+func (c *blogAPIClient) ArticleList(ctx context.Context, in *ArticleListRequest, opts ...grpc.CallOption) (*ArticleListResponse, error) {
+	out := new(ArticleListResponse)
+	err := c.cc.Invoke(ctx, "/blog.BlogAPI/ArticleList", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *blogAPIClient) Article(ctx context.Context, in *ArticleRequest, opts ...grpc.CallOption) (*ArticleResponse, error) {
+	out := new(ArticleResponse)
+	err := c.cc.Invoke(ctx, "/blog.BlogAPI/Article", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// BlogAPIServer is the server API for BlogAPI service.
+type BlogAPIServer interface {
+	ArticleList(context.Context, *ArticleListRequest) (*ArticleListResponse, error)
+	Article(context.Context, *ArticleRequest) (*ArticleResponse, error)
+}
+
+// UnimplementedBlogAPIServer can be embedded to have forward compatible implementations.
+type UnimplementedBlogAPIServer struct {
+}
+
+func (*UnimplementedBlogAPIServer) ArticleList(context.Context, *ArticleListRequest) (*ArticleListResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ArticleList not implemented")
+}
+func (*UnimplementedBlogAPIServer) Article(context.Context, *ArticleRequest) (*ArticleResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method Article not implemented")
+}
+
+func RegisterBlogAPIServer(s *grpc.Server, srv BlogAPIServer) {
+	s.RegisterService(&_BlogAPI_serviceDesc, srv)
+}
+
+func _BlogAPI_ArticleList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ArticleListRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BlogAPIServer).ArticleList(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/blog.BlogAPI/ArticleList",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BlogAPIServer).ArticleList(ctx, req.(*ArticleListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _BlogAPI_Article_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ArticleRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BlogAPIServer).Article(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/blog.BlogAPI/Article",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BlogAPIServer).Article(ctx, req.(*ArticleRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+var _BlogAPI_serviceDesc = grpc.ServiceDesc{
+	ServiceName: "blog.BlogAPI",
+	HandlerType: (*BlogAPIServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "ArticleList",
+			Handler:    _BlogAPI_ArticleList_Handler,
+		},
+		{
+			MethodName: "Article",
+			Handler:    _BlogAPI_Article_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "blog/blog_api.proto",
 }
